@@ -1,0 +1,17 @@
+
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@layer components {
+  .h-full-section {
+    @apply h-[calc(100vh - 79px)];
+  }
+}

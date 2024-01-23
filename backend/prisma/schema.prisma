@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String
+  password_hash String
+  avatar String?
+  role User_Roles
+}
+
+enum User_Roles {
+  ADMIN
+  USER
+}
+
+enum Component_Types {
+  MACROELEMENT
+  MICROELEMENT
+  VITAMIN
+}
+
+model Chem_Element {
+  id Int @id @default(autoincrement())
+  name String 
+  formula String
+  component Component[]
+  type Component_Types 
+}
+
+model Component {
+  id Int @id @default(autoincrement())
+  element Chem_Element @relation( fields: [element_id],references: [id], onDelete: Cascade)
+  element_id Int
+  mg_per_liter Float
+  concentration Float
+  medium GrowthMedium @relation( fields: [medium_id], references: [id], onDelete: Cascade)
+  medium_id Int
+}
+
+model GrowthMedium {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  components Component[]
+}
+

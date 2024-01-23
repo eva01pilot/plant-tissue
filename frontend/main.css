@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .h-full-section {
+    @apply 'h-[calc(100vh - 79px)]';
+  }
+}
