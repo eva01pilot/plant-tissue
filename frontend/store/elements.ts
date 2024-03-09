@@ -14,15 +14,23 @@ export const elementTypes = {
   'VITAMIN': 'Витамин'
 } as const
 
-export const elementsStore = defineStore("elements",()=>{
+export const elementsStore = defineStore("elements", () => {
   const elements = ref<ElementTable[]>([])
-  const {$trpc} = useNuxtApp()
-  const getElements = computed(()=>elements.value)
+  const { $trpc } = useNuxtApp()
+  const searchTerm = ref('')
+  const getElements = computed(() => !!searchTerm.value ? searchElements.value: elements.value)
   async function getAllElements() {
-    const res = await $trpc.element.getAllElements.query({page:1, limit: 100})
-    elements.value = res.map((el)=>({...el, typeName: elementTypes[el.type]})) 
+    const res = await $trpc.element.getAllElements.query({ page: 1, limit: 100 })
+    //@ts-ignore
+    elements.value = res.map((el) => ({ ...el, typeName: elementTypes[el.type] }))
     console.log(elements.value)
   }
+
+
+  const searchElements = computed(()=> {
+    console.log(searchTerm.value)
+    return elements.value.filter((el)=>el.name.includes(searchTerm.value) || el.formula.includes(searchTerm.value))
+  })
 
   async function addElement(element: ElementTable) {
     await $trpc.element.createElement.mutate(element)
@@ -30,10 +38,10 @@ export const elementsStore = defineStore("elements",()=>{
   }
 
   async function deleteElement(element: ElementTable) {
-    if(!element.id) return
-    await $trpc.element.deleteElement.mutate({id: element.id})
+    if (!element.id) return
+    await $trpc.element.deleteElement.mutate({ id: element.id })
     await getAllElements()
-  } 
-  return {elements, getAllElements, addElement, getElements, deleteElement}
+  }
+  return { elements, getAllElements, addElement, getElements, deleteElement, searchElements, searchTerm }
 })
 

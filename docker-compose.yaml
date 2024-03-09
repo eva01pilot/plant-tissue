@@ -23,4 +23,4 @@ services:
        PGADMIN_DEFAULT_EMAIL: pgadmin@mycomp.com
        PGADMIN_DEFAULT_PASSWORD: secret
     depends_on:
-      - plant-tissue-postgres 
+      - plant-tissue-postgres

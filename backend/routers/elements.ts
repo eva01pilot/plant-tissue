@@ -1,7 +1,7 @@
 import {adminProtectedProcedure, userProtectedProcedure} from '../trpc'
 import {createElementSchema, deleteElementSchema, updateElementSchema} from '../validation-schemas/element-validation'
 import ElementsController from '../controllers/elements'
-import { getAllSchema } from '../validation-schemas/common'
+import { getAllSchema, searchElementsSchema } from '../validation-schemas/common'
 import { t } from '../trpc'
 
 export const elementsRouter = t.router({
@@ -11,10 +11,13 @@ export const elementsRouter = t.router({
   getAllElements: userProtectedProcedure
     .input(getAllSchema)
     .query(({input})=>ElementsController.getAllElements(input)),
-  deleteElement:  adminProtectedProcedure 
+  deleteElement:  adminProtectedProcedure
     .input(deleteElementSchema)
     .mutation(({input})=>ElementsController.deleteElement(input)),
   updateElement: adminProtectedProcedure
     .input(updateElementSchema)
     .mutation(({input})=>ElementsController.updateElement(input)),
+  searchElement: userProtectedProcedure
+    .input(searchElementsSchema)
+    .query(({input})=>ElementsController.searchElements(input))
 })

@@ -1,10 +1,10 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../prisma/prisma-client";
-import { createElementInput } from "../validation-schemas/element-validation";
+import { createElementInput, createElementWithMetaDataInput } from "../validation-schemas/element-validation";
 
-export const createElementHandler = async(input: createElementInput) => {
+export const createElementHandler = async(input: createElementWithMetaDataInput) => {
   return (await prisma.chem_Element.create({data: input}))
-} 
+}
 
 
 export const getElementsHandler = async(
@@ -31,7 +31,7 @@ export const findUniqueElement = async (
     select: Prisma.Chem_ElementSelect
 ) => {
   return (await prisma.chem_Element.findUnique({
-    where, 
+    where,
     select
   }))
 }

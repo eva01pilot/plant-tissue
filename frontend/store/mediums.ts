@@ -17,7 +17,13 @@ export const schema = z.object({
     z.object({
       mg_per_liter: z.number(),
       concentration: z.number(),
-      element_id: z.string(),
+      element: z.object({
+        id:z.number(),
+        name:z.string(),
+        formula:z.string(),
+        type:z.enum(['MICROELEMENT', 'MACROELEMENT', 'VITAMIN']),
+        meta_data:z.any(),typeName: z.string()
+      }),
     }),
   ),
 });
@@ -36,10 +42,10 @@ export const mediumsStore = defineStore("mediums", () => {
   async function addMedium(medium: z.infer<typeof schema>) {
     await $trpc.medium.createMedium.mutate({
       ...medium,
-      components: medium.components.map((comp) => ({
+      components: medium.components.map((comp) =>{ console.log(comp);return {
         ...comp,
-        element_id: parseInt(comp.element_id),
-      })),
+        element_id: comp.element.id,
+      }}),
     });
 
     await getAllMediums();

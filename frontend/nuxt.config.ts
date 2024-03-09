@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import VueDevTools from 'vite-plugin-vue-devtools'
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: true,  },
   ssr: false,
   alias: {
     "@Components": "./components",
@@ -20,8 +21,13 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      TRPC_DOMAIN: "http://localhost:3000/trpc",
+      TRPC_DOMAIN: "https://api.ilyadev.com/trpc",
     },
+  },
+  vite: {
+    plugins:[
+      VueDevTools()
+    ]
   },
   devServer: {
     port: 8000,
@@ -32,6 +38,10 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  css: ["~/assets/css/tailwind.css"],
-  modules: ["@nuxtjs/tailwindcss",  '@pinia/nuxt',],
+  primevue: {
+    options: {
+    }
+  },
+  css: ["~/assets/css/tailwind.css", "primevue/resources/themes/aura-light-green/theme.css"],
+  modules: ["@nuxtjs/tailwindcss",  '@pinia/nuxt','nuxt-primevue'],
 });

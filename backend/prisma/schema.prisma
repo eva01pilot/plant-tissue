@@ -31,10 +31,11 @@ enum Component_Types {
 
 model Chem_Element {
   id Int @id @default(autoincrement())
-  name String 
+  name String
   formula String
   component Component[]
-  type Component_Types 
+  type Component_Types
+  meta_data Json
 }
 
 model Component {

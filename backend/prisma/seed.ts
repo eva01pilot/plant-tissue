@@ -1,11 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-  console.log('ayaya')
+  await prisma.user.deleteMany({
+    where: {
+      role: {equals: 'ADMIN'}
+    }
+  })
   const user = await prisma.user.create({
     data: {
       role: "ADMIN",
-      password_hash: Bun.password.hashSync("32143678"),
+      password_hash: Bun.password.hashSync("1111"),
       username: "admin",
       avatar: "",
     },
@@ -14,5 +18,3 @@ const prisma = new PrismaClient();
     }
   });
   const users = await prisma.user.findMany()
-  console.log('ayaya')
-  console.log(users)

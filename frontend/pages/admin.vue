@@ -7,7 +7,7 @@
   >
     <template #content(components)>
       <div
-        class="md:flex flex-col md:flex-row w-full justify-center md:flex-[1_auto] overflow-auto max-h-full"
+        class="md:flex flex-col lg:flex-row w-full justify-center md:flex-[1_auto] overflow-auto max-h-full"
       >
         <AdminCreateElementForm class="w-full md:m-2" />
         <Separator
@@ -25,7 +25,7 @@
     </template>
     <template #content(mediums)>
       <div
-        class="flex flex-col md:flex-row w-full justify-center flex-[1_auto] overflow-auto"
+        class="flex flex-col lg:flex-row w-full justify-center flex-[1_auto] overflow-auto"
       >
         <AdminCreateMediumForm class="w-full md:m-2" />
         <Separator

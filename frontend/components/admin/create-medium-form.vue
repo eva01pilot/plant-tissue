@@ -4,7 +4,7 @@
       <FormItem>
         <FormLabel>Название среды</FormLabel>
         <FormControl>
-          <Input type="text" placeholder="Среда Мурасиге-Скуга" v-bind="componentField" />
+          <CommonInputText type="text" placeholder="Среда Мурасиге-Скуга" v-bind="componentField" />
         </FormControl>
       </FormItem>
     </FormField>
@@ -12,77 +12,47 @@
       <FormItem>
         <FormLabel>Описание среды</FormLabel>
         <FormControl>
-          <Input type="text" placeholder="Лучшая питательная среда" v-bind="componentField" />
+          <CommonTextArea v-bind="componentField" />
         </FormControl>
       </FormItem>
     </FormField>
     <FieldArray name="components" v-slot="{ fields, push, remove }">
       <div v-for="(field, idx) in fields">
-        <div class="flex flex-row gap-2 items-end">
-          <FormField
-            v-slot="{ componentField }"
-            :name="`components[${idx}].element_id`"
-          >
+        <div class="flex flex-row gap-4 items-end">
+          <FormField v-slot="{ componentField }" :name="`components[${idx}].element`">
             <FormItem>
               <FormLabel>Компоненты среды</FormLabel>
               <FormControl>
-                <Select placeholder="Хлорид кальция" v-bind="componentField">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите компонент" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem
-                        v-for="item in elements"
-                        :value="String(item.id as number)"
-                        >{{ item.name }}</SelectItem
-                      >
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                <CommonAutocomplete :items="elements" @change="(e:
+                  any) => { form.setFieldValue(`components[${idx}].element` as any, e.value) }" v-model:query="searchTerm" />
               </FormControl>
             </FormItem>
           </FormField>
-          <FormField
-            v-slot="{ componentField }"
-            :name="`components[${idx}].mg_per_liter`"
-          >
+          <FormField v-slot="{ componentField }" :name="`components[${idx}].mg_per_liter`">
             <FormItem>
-              <FormLabel>мг/л</FormLabel>
+              <FormLabel>Количество (мг/л)</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="100" v-bind="componentField" />
+                <CommonInputText type="number" placeholder="100" v-bind="componentField" />
               </FormControl>
             </FormItem>
           </FormField>
-          <FormField
-            v-slot="{ componentField }"
-            :name="`components[${idx}].concentration`"
-          >
+          <FormField v-slot="{ componentField }" :name="`components[${idx}].concentration`">
             <FormItem>
               <FormLabel>μ</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  placeholder="0.434"
-                  v-bind="componentField"
-                />
+                <CommonInputText type="number" placeholder="0.434" v-bind="componentField" />
               </FormControl>
             </FormItem>
           </FormField>
-          <UiButton
-            variant="destructive"
-            class="space-y-2"
-            @click="remove(idx)"
-          >
-            -
-          </UiButton>
+          <div tabindex="0">
+            <UiButton variant="destructive" class="space-y-2" @click="remove(idx)" type="button">
+              -
+            </UiButton>
+          </div>
         </div>
       </div>
       <div>
-        <UiButton
-          class="space-y-2"
-          @click="push({ element_id: null, mg_per_liter: 0, concentration: 0 })"
-        >
+        <UiButton type="button" class="space-y-2" @click="push({ element_id: null, mg_per_liter: 0, concentration: 0 })">
           Добавить поле компонента
         </UiButton>
       </div>
@@ -93,7 +63,6 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import * as z from "zod";
 import { useForm, FieldArray, type SubmissionContext } from "vee-validate";
 import {
   FormControl,
@@ -102,49 +71,39 @@ import {
   FormLabel,
   Form,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Button from "../ui/button/Button.vue";
-import { Input } from "../ui/input";
-import { elementsStore } from "~/store/elements";
+import { elementsStore, type ElementTable } from "~/store/elements";
 import { mediumsStore } from "~/store/mediums";
-import { elementTypes } from "~/store/elements";
-import type SelectVue from "../ui/select/Select.vue";
-import {schema} from "@/store/mediums"
+
+import { schema } from "@/store/mediums"
+import type { z } from "zod";
 const elemStore = elementsStore();
 const medStore = mediumsStore();
 
 await elemStore.getAllElements();
+const { searchTerm } = storeToRefs(elemStore)
+const selectedItem = ref<ElementTable>()
 
 const elements = computed(() => {
   return elemStore.getElements;
 });
 
-function getSubmitFn<Schema extends z.ZodObject<Record<string, any>>>(
-  _: Schema,
-  callback: (values: z.infer<Schema>, ctx: SubmissionContext) => void,
-) {
-  return (values: Record<string, any>, ctx: SubmissionContext): void => {
-    console.log('sub')
-    callback(values, ctx);
-  };
-}
 
-const initialData = {
+const initialData: z.infer<typeof schema> = {
   name: "",
   description: "",
   components: [
     {
       mg_per_liter: 0,
       concentration: 0,
-      element_id: 0,
+      element: {
+        id: 0,
+        name: '',
+        type: 'MICROELEMENT',
+        formula: '',
+        typeName: '',
+        meta_data: {}
+      },
     },
   ],
 };
@@ -155,8 +114,11 @@ const form = useForm({
   validationSchema: formSchema,
   initialValues: initialData
 });
-const onSubmit = form.handleSubmit((values)=>{
-  medStore.addMedium(values);
+
+
+const onSubmit = form.handleSubmit((values) => {
+  form.validate()
   console.log('submit')
-}) 
+  medStore.addMedium(values);
+})
 </script>

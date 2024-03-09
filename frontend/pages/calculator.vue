@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 h-full-section">
     <div class="flex justify-center  flex-col">
       <Label for="select-medium">Выберите питательную среду</Label>
-      <UiSelect id="select-medium" :default-value="mediums[0].name">
+      <UiSelect id="select-medium" :default-value="mediums[0]?.name ?? ''">
         <UiSelectTrigger>
           <UiSelectValue />
         </UiSelectTrigger>
