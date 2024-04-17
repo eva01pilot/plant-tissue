@@ -1,10 +1,25 @@
 <template>
   <NuxtLayout>
     <NuxtPage />
-    <Toaster />
   </NuxtLayout>
 </template>
+<style>
+@layer tailwind-base, primevue, tailwind-utilities;
 
-<script setup lang="ts">
-  import Toaster from '@/components/ui/toast/Toaster.vue'
-</script>
+@layer tailwind-base {
+    @tailwind base;
+}
+
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
+}
+
+@layer utilities {
+  .h-remaining {
+    height: calc(100svh - 62px);
+  }
+}
+
+
+</style>

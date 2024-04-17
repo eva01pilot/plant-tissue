@@ -2,6 +2,7 @@ import { useNuxtApp } from "nuxt/app";
 import type { AppRouter } from "../../backend";
 import type { inferRouterOutputs } from "@trpc/server";
 import * as z from "zod";
+import { defineStore } from "pinia";
 type RouterOutput = inferRouterOutputs<AppRouter>;
 export interface Component {
   mg_per_liter: number;
@@ -10,6 +11,7 @@ export interface Component {
 }
 
 export type Medium = RouterOutput["medium"]["getAllMediums"][number];
+
 export const schema = z.object({
   name: z.string(),
   description: z.string(),
@@ -22,7 +24,8 @@ export const schema = z.object({
         name:z.string(),
         formula:z.string(),
         type:z.enum(['MICROELEMENT', 'MACROELEMENT', 'VITAMIN']),
-        meta_data:z.any(),typeName: z.string()
+        meta_data:z.any(),
+        typeName: z.enum(['Микроэлемент', 'Макроэлемент', 'Витамин'])
       }),
     }),
   ),

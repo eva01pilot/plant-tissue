@@ -1,21 +1,12 @@
 <template>
-  <CommonCard>
-    <template #title> Вход </template>
-    <template #content>
-      <LoginForm />
-    </template>
-    <template #footer>
-      <UiButton variant="link">
-        <NuxtLink to="/register">Зарегистрироваться</NuxtLink>
-      </UiButton>
-    </template>
-  </CommonCard>
+  <div v-focustrap>
+    <LoginForm />
+  </div>
 </template>
 
 <script setup lang="ts">
-import LoginForm from "~/components/login/login-form.vue";
-
+import LoginForm from '~/components/login/LoginForm.vue';
 definePageMeta({
-  layout: "auth-layout",
-});
+  layout: 'auth-layout'
+})
 </script>

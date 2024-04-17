@@ -19,7 +19,7 @@ export default defineNuxtPlugin(() => {
           return fetch(url, {
             ...options,
             credentials: "include",
-          })            
+          })
           ;
         },
       }),

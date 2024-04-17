@@ -1,17 +1,18 @@
 import { useNuxtApp } from "nuxt/app"
+import { defineStore } from "pinia"
 
 export interface ElementTable {
   name: string,
   formula: string,
   type: 'MICROELEMENT' | 'MACROELEMENT' | 'VITAMIN',
-  typeName: 'Микроэлемент' | 'Макроэлемент' | 'Витамин'
+  typeName?: 'Микроэлемент' | 'Макроэлемент' | 'Витамин'
   id?: number
 }
 
 export const elementTypes = {
   'MICROELEMENT': 'Микроэлемент',
   'MACROELEMENT': 'Макроэлемент',
-  'VITAMIN': 'Витамин'
+  'VITAMIN': 'Витамин',
 } as const
 
 export const elementsStore = defineStore("elements", () => {
@@ -21,9 +22,8 @@ export const elementsStore = defineStore("elements", () => {
   const getElements = computed(() => !!searchTerm.value ? searchElements.value: elements.value)
   async function getAllElements() {
     const res = await $trpc.element.getAllElements.query({ page: 1, limit: 100 })
-    //@ts-ignore
-    elements.value = res.map((el) => ({ ...el, typeName: elementTypes[el.type] }))
-    console.log(elements.value)
+    const mapped = res.map((el) => ({ ...el, typeName: elementTypes[el.type] }))
+    elements.value = mapped
   }
 
 
@@ -44,4 +44,3 @@ export const elementsStore = defineStore("elements", () => {
   }
   return { elements, getAllElements, addElement, getElements, deleteElement, searchElements, searchTerm }
 })
-
