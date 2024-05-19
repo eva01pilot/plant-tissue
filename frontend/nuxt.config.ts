@@ -1,24 +1,32 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  modules: ["@pinia/nuxt", "@nuxtjs/tailwindcss", "nuxt-primevue"],
+  primevue: {
+    options: {
+      unstyled: true,
+    },
+  },
+  vite: {
+    server: {
+      hmr: {
+        protocol: "ws",
+        host: "0.0.0.0",
+      },
+      watch: {
+        usePolling: true,
+        interval: 1000,
+      },
+    },
+  },
   devServer: {
-    port: 8000
+    port: 8000,
   },
   runtimeConfig: {
     public: {
       TRPC_DOMAIN: "https://api.ilyadev.com/trpc",
     },
   },
-  modules: ['nuxt-primevue', '@pinia/nuxt'],
-  css: ['primeicons/primeicons.css', 'primevue/resources/themes/aura-light-green/theme.css'],
-  primevue: {
-    cssLayerOrder: 'tailwind-base, primevue, tailwind-utilities',
-
-  },
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
-})
+  ssr: false,
+  css: ["assets/css/main.css", "vue-advanced-cropper/dist/style.css"],
+});

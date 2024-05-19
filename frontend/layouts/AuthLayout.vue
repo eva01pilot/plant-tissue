@@ -1,8 +1,9 @@
 <template>
-  <main class="flex justify-center items-center w-screen h-screen">
+  <div class="w-screen h-screen bg-stone-50">
     <slot />
-  </main>
+  </div>
 </template>
 
 <script setup lang="ts">
+
 </script>

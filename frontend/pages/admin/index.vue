@@ -1,21 +1,33 @@
 <template>
-  <div class="h-full w-full grid grid-cols-1 md:grid-cols-2">
-    <NuxtLink to="/admin/medium-form" class="flex justify-center
-      items-center w-full h-full">
-      <Button label="К форме питательных сред" severity="success" class="h-full
-        w-full"/>
-    </NuxtLink>
-    <NuxtLink to="/admin/component-form" class="flex justify-center
-      items-center">
-      <Button label="К форме компонентов" severity="secondary" class="h-full
-        w-full"/>
-    </NuxtLink>
-  </div>
+  <CommonTab :tabs v-model="activeTab">
+    <template #mediumForm>
+        <AdminCreateMediumForm class="overflow-scroll h-full"/>
+    </template>
+    <template #componentForm>
+        <AdminCreateComponentForm />
+    </template>
+  </CommonTab>
 </template>
 
 <script setup lang="ts">
-import Button from 'primevue/button';
+const windows = [
+  //  { name: "componentForm", title: "Форма компонентов" } as const,
+  { name: "mediumForm", title: "Форма сред" } as const,
+  //  { name: "componentTable", title: "Таблица компонентов" } as const,
+  //  { name: "mediumTable", title: "Таблица сред" } as const,
+];
+
+const windowsRef = ref<typeof windows>(windows);
+
+const handleClose = (name: string) => {
+  windowsRef.value = windowsRef.value.filter((el) => el.name !== name);
+};
+
+const tabs = [{title:"Форма сред" as const, name:"mediumForm"}, {title:"Форма компонентов" as
+const, name:"componentForm"}];
+const activeTab = ref(tabs[0].name)
+
 definePageMeta({
-  layout: 'app-layout'
-})
+  layout: "lk-layout",
+});
 </script>

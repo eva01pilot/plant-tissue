@@ -1,63 +1,48 @@
-import { useNuxtApp } from "nuxt/app";
-import type { AppRouter } from "../../backend";
-import type { inferRouterOutputs } from "@trpc/server";
-import * as z from "zod";
-import { defineStore } from "pinia";
-type RouterOutput = inferRouterOutputs<AppRouter>;
-export interface Component {
-  mg_per_liter: number;
-  concentration: number;
-  element_id: number;
-}
+import type { ComponentRow } from "~/api/component";
+import type { CreateMediumInput, MediumFull } from "~/api/medium";
 
-export type Medium = RouterOutput["medium"]["getAllMediums"][number];
 
-export const schema = z.object({
-  name: z.string(),
-  description: z.string(),
-  components: z.array(
-    z.object({
-      mg_per_liter: z.number(),
-      concentration: z.number(),
-      element: z.object({
-        id:z.number(),
-        name:z.string(),
-        formula:z.string(),
-        type:z.enum(['MICROELEMENT', 'MACROELEMENT', 'VITAMIN']),
-        meta_data:z.any(),
-        typeName: z.enum(['Микроэлемент', 'Макроэлемент', 'Витамин'])
-      }),
-    }),
-  ),
-});
-export const mediumsStore = defineStore("mediums", () => {
-  const mediums = ref<Medium[]>([]);
-  const { $trpc } = useNuxtApp();
-  const getMediums = computed(() => mediums.value);
-  async function getAllMediums() {
-    const res = await $trpc.medium.getAllMediums.query({
-      page: 1,
-      limit: 10000,
-    });
-    mediums.value = res;
+export const useMediumStore = defineStore("mediums", ()=>{
+  const {$api, $notify} = useNuxtApp()
+  const mediums = ref<MediumFull[]>([])
+
+  const fetchMediums = async()=>{
+    mediums.value = (await $api.medium.getMediums()).data
   }
 
-  async function addMedium(medium: z.infer<typeof schema>) {
-    await $trpc.medium.createMedium.mutate({
-      ...medium,
-      components: medium.components.map((comp) =>{ console.log(comp);return {
-        ...comp,
-        element_id: comp.element.id,
-      }}),
-    });
+  return {mediums, fetchMediums}
+})
 
-    await getAllMediums();
+export const useMediumFormStore = defineStore("medium-form", () => {
+  const formValues = reactive<CreateMediumInput>({
+    name: "",
+    description: "",
+    thumbnail: null,
+    components: [{mass:"0",component: {id: null, name: ""}}],
+  });
+
+  const {$api, $notify} = useNuxtApp()
+
+
+  const components = ref<ComponentRow[]>([])
+  const searchComponents = async(search: string) => {
+    console.log((await $api.component.searchComponents(search)).data)
+    components.value = (await $api.component.searchComponents(search)).data
   }
 
-  async function deleteMedium(medium: Medium) {
-    if (!medium.id) return;
-    await $trpc.medium.deleteMedium.mutate({ medium_id: medium.id });
-    await getAllMediums();
+  const createMedium = async() => {
+    try {
+      await $api.medium.createMedium({
+        ...formValues,
+        components: formValues.components.map((el)=>({component_id: el.component.id, mass:el.mass}))
+      })
+
+    } catch(e) {
+      $notify('Не удалось создать среду')
+    }
+
   }
-  return { mediums, getAllMediums, addMedium, getMediums, deleteMedium };
+
+
+  return { formValues, components, searchComponents, createMedium };
 });
