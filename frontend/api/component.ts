@@ -2,7 +2,9 @@ import type { Axios, AxiosInstance } from "axios";
 
 export interface ComponentRow {
   id: number;
-  name: string;
+  component_formula: string;
+  component_molar_mass: number;
+  type_id: number;
 }
 
 export interface ComponentRowFull extends ComponentRow {
@@ -42,8 +44,8 @@ export class Component {
     this.instance = instance
   }
 
-  async searchComponents(search:string) {
-    return await this.instance.post<ComponentRow[]>('/components/search', {search})
+  async searchComponents() {
+    return await this.instance.post<ComponentRow[]>('/components/search')
   }
 
   async getComponentTypes() {

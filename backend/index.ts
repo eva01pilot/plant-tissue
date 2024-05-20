@@ -10,11 +10,13 @@ import { elementsRouter } from './routers/elements';
 import cors from 'cors'
 import cookieParser from "cookie-parser";
 import fs from 'fs'
+import { calculatorRouter } from './routers/calculator';
 export const appRouter = t.router({
   auth: authRouter,
   user: userRouter,
   medium: mediumsRouter,
   element: elementsRouter,
+  calculator: calculatorRouter,
 });
 
 export type AppRouter = typeof appRouter;

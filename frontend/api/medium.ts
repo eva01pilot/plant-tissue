@@ -4,7 +4,9 @@ import { objectToFormData } from "~/lib/helpers/formdata";
 export interface CreateMediumComponentRelationInput {
   component: {
     id: number | null;
-    name: string;
+    component_formula: string;
+    component_molar_mass: number;
+    type_id: number;
   };
   mass: string;
 }
@@ -35,11 +37,13 @@ export interface MediumFull {
 }
 
 export interface MediumComponent {
-  component: number;
-  type_id: number;
-  formula: string;
-  name: string;
-  mass: number;
+  component: {
+    id: number|null;
+    type_id: number;
+    component_formula: string;
+    component_molar_mass: number;
+  };
+  mass: string;
 }
 
 export class Medium {
@@ -52,6 +56,6 @@ export class Medium {
     return this.instance.post("/mediums", data);
   }
   async getMediums() {
-    return this.instance.get<MediumFull[]>('/mediums')
+    return this.instance.get<MediumFull[]>("/mediums");
   }
 }

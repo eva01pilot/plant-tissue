@@ -10,7 +10,7 @@ export const loginSchema = z.object({
 })
 
 export const signupSchema = z.object({
-  username: z.string().max(20),
+  username: z.string().max(20).min(5),
   password: z.string(),
   avatar: z.string(),
 })

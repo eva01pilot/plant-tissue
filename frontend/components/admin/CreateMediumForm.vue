@@ -1,73 +1,57 @@
 <template>
-  <form @submit.prevent class="flex flex-col gap-6 w-full">
-    <FormTextInput
-      type="text"
-      id="name"
-      label="Название питательной среды"
+  <form action="" class="flex flex-col gap-3 items-center">
+    <UIInput
       v-model="formValues.name"
+      placeholder="Название питательной среды"
     />
-    <FormTextArea
-      type="text"
-      id="description"
-      label="Описание питательной среды"
+    <UITextarea
+      class="max-h-96"
       v-model="formValues.description"
-    />
-    <FormFileInput
-      label="Обложка питательной среды"
-      id="thumbnail"
-      v-model="formValues.thumbnail"
+      placeholder="Описание питательной среды"
     />
     <div
-      v-for="(component, id) in formValues.components"
-      class="grid grid-cols-[5fr_1fr_48px] gap-2"
+      class="grid grid-cols-[1fr_64px_64px] gap-1 w-full"
+      v-for="(comp, id) in formValues.components"
     >
-      <FormAutocomplete
-        v-model="component.component"
-        @search="(e)=>mediumFormStore.searchComponents(e)"
+      <FormCombobox
+        v-model="formValues.components[id].component"
+        valueKey="component_formula"
         :items="components"
-        label="Компонент"
       />
-      <FormTextInput
+      <UIInput
         type="number"
-        v-model="component.mass"
-        label="Мг/л"
-        :id="`mass[${id}]`"
+        v-model="formValues.components[id].mass"
+        placeholder="Мг/л"
       />
-      <CommonBoxButton type="button" class="self-end" variant="main"
-      @click="formValues.components.splice(id,1)">
-      -
-      </CommonBoxButton>
+      <UIButton type="button" variant="destructive" @click="delete formValues.components[id]"
+        >-</UIButton
+      >
     </div>
-    <CommonBoxButton
-      type="button"
-      :disabled="!canAddComponent"
-      variant="main"
+    <UIButton
+      variant="outline"
+      :disabled="!formValues.components.findLast(()=>true)?.component.component_formula ||
+      !formValues.components.findLast(()=>true)?.mass"
+      class="w-full"
       @click="
-      formValues.components.push({ mass: '', component:{id:null, name:''} })
+        formValues.components.push({
+          mass: '0',
+          component: { id: null, component_formula: '',component_molar_mass:
+          0,type_id:0 },
+        })
       "
+      >Добавить компонент</UIButton
     >
-      Добавить компонент
-    </CommonBoxButton>
-
-    <CommonBoxButton
-      type="submit"
-      variant="secondary"
-      @click="mediumFormStore.createMedium"
-    >
-      Создать среду
-    </CommonBoxButton>
-
+    <MiscCropper v-model="formValues.thumbnail"/>
+    <UIButton type="submit" class="self-end"> Создать </UIButton>
   </form>
 </template>
 
 <script setup lang="ts">
 import { useMediumFormStore } from "~/store/mediums";
 
-const canAddComponent = computed(()=>{
-  if(!formValues.value.components.length) return true
-  return !!formValues.value.components[formValues.value.components.length-1].component.id
-})
-
 const mediumFormStore = useMediumFormStore();
-const { formValues, components } = storeToRefs(mediumFormStore);
+const { components, formValues } = storeToRefs(mediumFormStore);
+onMounted(() => {
+  mediumFormStore.searchComponents("");
+});
 </script>

@@ -5,6 +5,7 @@ export const useSignupStore = defineStore("signup", () => {
   const login = ref("");
   const password = ref("");
   const passwordRepeat = ref("");
+  const avatar = ref<File>();
   const { $trpc, $notify, $api } = useNuxtApp();
   const errors = reactive(
     new Map<"login" | "password" | "passwordRepeat", string>(new Map()),
@@ -38,13 +39,14 @@ export const useSignupStore = defineStore("signup", () => {
         password: password.value,
         password_repeat: passwordRepeat.value,
       });
+      navigateTo('/login')
     } catch (e) {
       $notify("Неправильный логин");
       errors.set("login", "Неправильный логин или пароль");
       errors.set("password", "Неправильный логин или пароль");
     }
   };
-  return { login, password, errors, submit, passwordRepeat, step, nextStep };
+  return { login, password, errors, submit, passwordRepeat, step, nextStep, avatar };
 });
 
 if (import.meta.hot) {

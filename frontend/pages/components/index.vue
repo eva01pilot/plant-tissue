@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { CommonDatatable } from '#components';
 import { createColumnHelper, type ColumnDef } from '@tanstack/vue-table';
 import type { ComponentFull, ElementSign } from '~/api/component';
 import { useComponentsStore } from '~/store/components';

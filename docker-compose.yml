@@ -1,0 +1,68 @@
+version: "3.7"
+services:
+  python-chemistry:
+    build: ./python-chemistry
+    container_name: python-chemistry
+    restart: unless-stopped
+    ports:
+      - 4000:4000
+  frontend:
+    volumes:
+      - type: bind
+        source: ./frontend
+        target: /var/www/ilyadev.com/plant-tissue/frontend
+    working_dir: /var/www/ilyadev.com/plant-tissue/frontend
+    tty: true
+    build:
+      context: ./frontend/
+      target: dev
+    container_name: frontend
+    ports:
+      - 8000:8000
+      - 24678:24678 # hmr fix
+  golang-backend:
+    build:
+      context: ./golang-backend/
+    container_name: golang-backend
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - 1000:1000
+    volumes:
+       - ./golang-backend:/app
+  backend:
+    build:
+      context: ./backend/
+    container_name: backend
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - 3000:3000
+    volumes:
+      - type: bind
+        source: ./backend
+        target: /app
+  plant-tissue-postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    container_name: plant-tissue-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 32143678
+      POSTGRES_DB: plant-tissue-postgres
+    volumes:
+      - "/var/run/postgres.sock:/var/run/postgres/postgres.sock"
+      - "/home/myuser/docker-apps/volumes/postgres-data:/var/lib/postgresql/data"
+  pg_admin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+       PGADMIN_CONFIG_SERVER_MODE: 'False'
+       GUNICORN_THREADS: 1
+       PGADMIN_DEFAULT_EMAIL: pgadmin@mycomp.com
+       PGADMIN_DEFAULT_PASSWORD: secret
+    depends_on:
+      - plant-tissue-postgres

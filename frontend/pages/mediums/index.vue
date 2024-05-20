@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { CommonDatatable } from '#components';
 import { createColumnHelper, type ColumnDef } from '@tanstack/vue-table';
 import clsx from 'clsx';
 import type { ComponentFull, ElementSign } from '~/api/component';

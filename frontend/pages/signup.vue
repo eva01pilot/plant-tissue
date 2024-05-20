@@ -1,80 +1,79 @@
 <template>
   <div class="flex justify-center items-center w-full h-full">
-    <CommonPanel class="bg-rose-50">
+    <UICard>
       <form @submit.prevent="signupStore.submit" class="flex flex-col gap-10">
         <div
           class="flex px-12 pt-12 justify-center items-center flex-col gap-6"
         >
           <template v-if="step === 'credentials'">
-            <FormTextInput
+            <UIInput
               v-model="login"
               type="text"
-              label="Логин"
+              placeholder="Логин"
               id="login"
               autocomplete="username"
               :error="errors?.get('login')"
               @update:model-value="errors.set('login', '')"
             >
-              <template #icon>
-                <IconsUser />
-              </template>
-            </FormTextInput>
-            <FormTextInput
+            </UIInput>
+            <UIInput
               v-model="password"
               autocomplete="new-password"
               type="password"
-              label="Пароль"
+              placeholder="Пароль"
               id="password"
               :error="errors.get('password')"
               @update:model-value="errors.set('password', '')"
-            >
-              <template #icon>
-                <IconsKey />
-              </template>
-            </FormTextInput>
-            <FormTextInput
+            />
+            <UIInput
               v-model="passwordRepeat"
               type="password"
               autocomplete="new-password"
-              label="Повторите
-        пароль"
+              placeholder="Повторите пароль"
               id="passwordRepeat"
               :error="errors.get('passwordRepeat')"
             >
-              <template #icon>
-                <IconsKey />
-              </template>
-            </FormTextInput>
+            </UIInput>
           </template>
-          <template v-else-if="step==='avatar'">
-            <CommonCropper src="1"/>
-
+          <template v-else-if="step === 'avatar'">
+            <MiscCropper v-model="avatar"/>
           </template>
         </div>
         <div class="px-12 flex flex-col items-end w-full">
-          <CommonBoxButton @click="signupStore.nextStep" v-if="step==='credentials'" type="button" variant="main">
+          <UIButton
+            @click="signupStore.nextStep"
+            as="button"
+            v-if="step === 'credentials'"
+            type="button"
+          >
             Далее
-          </CommonBoxButton>
-          <CommonBoxButton v-if="step==='avatar'" type="submit" variant="main">
+          </UIButton>
+          <UIButton
+            v-if="step === 'avatar'"
+            type="submit"
+          >
             Зарегистрироваться
-          </CommonBoxButton>
+          </UIButton>
         </div>
-        <div class="w-full bg-rose-100 px-12 py-6">
-          <CommonLink to="/login" class=""> Войти </CommonLink>
-        </div>
+        <UICardFooter class="w-full px-12 py-6">
+          <UIButton variant="link">
+            <NuxtLink to="/login" class=""> Войти </NuxtLink>
+          </UIButton>
+        </UICardFooter>
       </form>
-    </CommonPanel>
+    </UICard>
   </div>
 </template>
 
 <script setup lang="ts">
-import { IconsUser, IconsKey, CommonCropper } from "#components";
+import { UIButton, UICard, UIInput, UICardFooter } from "#components";
+import { storeToRefs } from "pinia";
 import { useSignupStore } from "~/store/sign_up";
 definePageMeta({
   layout: "auth-layout",
 });
 const signupStore = useSignupStore();
 
-const { errors, password, login, passwordRepeat, step } =
+const { errors, password, login, passwordRepeat, step, avatar } =
   storeToRefs(signupStore);
 </script>
