@@ -61,6 +61,7 @@ func main() {
 	r.Get("/components", controllers.MakeHandlerFunc(baseController.Component.GetComponents))
 	r.Post("/components/search", controllers.MakeHandlerFunc(baseController.Component.SearchComponents))
 	r.Get("/component_types", controllers.MakeHandlerFunc(baseController.Component_type.GetComponentTypes))
+  r.Post("/calculate", controllers.MakeHandlerFunc(baseController.Calculator.Calculate))
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<div>hello_world!!</div>"))
 	})

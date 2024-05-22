@@ -13,6 +13,7 @@ type BaseController struct {
   Medium MediumController
   Component ComponentController
   Component_type ComponentTypeController
+  Calculator CalculatorController
 }
 
 func NewController(db *sql.DB) *BaseController {
@@ -20,7 +21,8 @@ func NewController(db *sql.DB) *BaseController {
   mediumController:=MediumController {DB:db}
   ComponentController:=ComponentController{DB: db}
   ComponentTypeController:=ComponentTypeController{DB:db}
+  CalculatorController:=CalculatorController{DB:db}
 
-  return &BaseController {db: db,User: userController, Medium: mediumController, Component: ComponentController,Component_type: ComponentTypeController}
+  return &BaseController {db: db,User: userController, Medium: mediumController, Component: ComponentController,Component_type: ComponentTypeController, Calculator:CalculatorController}
 }
 

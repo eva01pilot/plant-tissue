@@ -20,7 +20,7 @@ export const useMediumFormStore = defineStore("medium-form", () => {
     name: "",
     description: "",
     thumbnail: null,
-    components: [{ mass: "0", component: { id: null, component_formula: "",type_id:0, component_molar_mass: 0 } }],
+    components: [{ mg_per_liter: "0", component: { id: null, component_formula: "",type_id:0, component_molar_mass: 0 } }],
   });
 
   const { $api, $notify } = useNuxtApp();
@@ -47,7 +47,7 @@ export const useMediumFormStore = defineStore("medium-form", () => {
         ...formValues,
         components: formValues.components.map((el) => ({
           component_id: el.component.id,
-          mass: el.mass,
+          mg_per_liter: el.mg_per_liter,
         })),
       });
     } catch (e) {

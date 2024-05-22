@@ -1,5 +1,5 @@
 <template>
-  <form action="" class="flex flex-col gap-3 items-center">
+  <form @submit.prevent="mediumFormStore.createMedium" class="flex flex-col gap-3 items-center">
     <UIInput
       v-model="formValues.name"
       placeholder="Название питательной среды"
@@ -10,7 +10,7 @@
       placeholder="Описание питательной среды"
     />
     <div
-      class="grid grid-cols-[1fr_64px_64px] gap-1 w-full"
+      class="grid grid-cols-[1fr_128px_64px] gap-1 w-full"
       v-for="(comp, id) in formValues.components"
     >
       <FormCombobox
@@ -20,21 +20,24 @@
       />
       <UIInput
         type="number"
-        v-model="formValues.components[id].mass"
+        v-model="formValues.components[id].mg_per_liter"
         placeholder="Мг/л"
+        step="0.01"
       />
-      <UIButton type="button" variant="destructive" @click="delete formValues.components[id]"
+      <UIButton type="button" variant="destructive"
+      @click="formValues.components.splice(id,1)"
         >-</UIButton
       >
     </div>
     <UIButton
       variant="outline"
-      :disabled="!formValues.components.findLast(()=>true)?.component.component_formula ||
-      !formValues.components.findLast(()=>true)?.mass"
+      :disabled="(!formValues.components.findLast(()=>true)?.component.component_formula ||
+      !formValues.components.findLast(()=>true)?.mg_per_liter) &&
+      formValues.components.length"
       class="w-full"
       @click="
         formValues.components.push({
-          mass: '0',
+          mg_per_liter: '0',
           component: { id: null, component_formula: '',component_molar_mass:
           0,type_id:0 },
         })

@@ -18,35 +18,4 @@ export const useComponentsStore = defineStore("components", ()=>{
   return {componentTypes, fetchComponentTypes, components, fetchComponents}
 })
 
-export const useCreateComponentForm = defineStore("components-form", ()=>{
-  const {$api, $notify} = useNuxtApp()
-  const formValues = reactive<ComponentRowFull>({
-    id:0,
-    name: '',
-    formula: '',
-    type: null,
-  })
-
-  const componentTypes = ref<ComponentType[]>([])
-
-  const fetchComponentTypes = async()=>{
-    componentTypes.value = (await $api.component.getComponentTypes()).data
-  }
-
-  const createComponent = async() => {
-    try {
-      await $api.component.createComponent({
-        name: formValues.name,
-        formula: formValues.formula,
-        type_id: formValues.type?.id ?? 1
-      })
-
-    } catch(e) {
-      $notify("Произошла ошибка")
-    }
-  }
-
-  return {formValues, fetchComponentTypes, componentTypes, createComponent}
-
-})
 

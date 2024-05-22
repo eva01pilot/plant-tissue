@@ -16,6 +16,7 @@ export interface ComponentType {
   id: number;
   name: string;
   has_formula: boolean;
+  name_rus: string;
 }
 
 export interface CreateComponentInput {

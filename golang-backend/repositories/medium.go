@@ -28,14 +28,14 @@ func NewMediumRepo(db *sql.DB) *MediumRepo {
 	}
 }
 
-func (r *MediumRepo) GetMediums() ([]models.MediumWithComponents, error) {
-	var mediums []models.MediumWithComponents
+func (r *MediumRepo) GetMediumById(id int) (*models.MediumWithComponents, error) {
+	var mediums models.MediumWithComponents
 	var many_mediums []ManyMediums
 
 	rows, err := r.DB.Query(`SELECT medium.id, medium.name, medium.description, medium.thumbnail,component.id,
-component.name, component.type_id, component.formula, medium_component.mass from public.medium
+component.type_id, component.formula, medium_component.mg_per_liter from public.medium
 join public.medium_component on medium.id = medium_id
-join component on component.id=component_id;`)
+join component on component.id=component_id WHERE medium.id = $1;`, id)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ join component on component.id=component_id;`)
 	for rows.Next() {
 		var medium_row ManyMediums
 		err := rows.Scan(&medium_row.Id, &medium_row.Name, &medium_row.Description,
-			&medium_row.Thumbnail,&medium_row.Component_id, &medium_row.Component_name, &medium_row.Component_type_id,
+			&medium_row.Thumbnail, &medium_row.Component_id, &medium_row.Component_type_id,
 			&medium_row.Component_formula,
 			&medium_row.Mass)
 		if err != nil {
@@ -60,22 +60,89 @@ join component on component.id=component_id;`)
 			entry.Id = v.Id
 			entry.Thumbnail = v.Thumbnail
 			entry.Description = v.Description
-			entry.Components = append(entry.Components, models.Medium_ComponentFull{Component_id: v.Component_id,
-				Type_id: v.Component_type_id,
-				Formula: v.Component_formula,
-				Name:    v.Component_name,
-				Mass:    v.Mass})
+			entry.Components = append(entry.Components, models.Medium_ComponentFull{
+				Component: models.Medium_ComponentRow{
+					Id:                v.Component_id,
+					Component_formula: v.Component_formula,
+					Type_id:           v.Component_type_id,
+				},
+				Mg_per_liter: v.Mass})
 			medium_map[v.Id] = entry
 		} else {
 			entry.Name = v.Name
 			entry.Id = v.Id
 			entry.Thumbnail = v.Thumbnail
 			entry.Description = v.Description
-			entry.Components = append(entry.Components, models.Medium_ComponentFull{Component_id: v.Component_id,
-				Type_id: v.Component_type_id,
-				Formula: v.Component_formula,
-				Name:    v.Component_name,
-				Mass:    v.Mass})
+			entry.Components = append(entry.Components, models.Medium_ComponentFull{
+				Component: models.Medium_ComponentRow{
+					Id:                v.Component_id,
+					Component_formula: v.Component_formula,
+					Type_id:           v.Component_type_id,
+				},
+				Mg_per_liter: v.Mass})
+			medium_map[v.Id] = entry
+		}
+	}
+
+	for _, v := range medium_map {
+		println(v.Name)
+		mediums = v
+	}
+	return &mediums, nil
+}
+
+func (r *MediumRepo) GetMediums() ([]models.MediumWithComponents, error) {
+	var mediums []models.MediumWithComponents
+	var many_mediums []ManyMediums
+
+	rows, err := r.DB.Query(`SELECT medium.id, medium.name, medium.description, medium.thumbnail,component.id,
+component.type_id, component.formula, medium_component.mg_per_liter from public.medium
+join public.medium_component on medium.id = medium_id
+join component on component.id=component_id;`)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var medium_row ManyMediums
+		err := rows.Scan(&medium_row.Id, &medium_row.Name, &medium_row.Description,
+			&medium_row.Thumbnail, &medium_row.Component_id, &medium_row.Component_type_id,
+			&medium_row.Component_formula,
+			&medium_row.Mass)
+		if err != nil {
+			return nil, err
+		}
+		many_mediums = append(many_mediums, medium_row)
+	}
+
+	medium_map := make(map[int]models.MediumWithComponents)
+
+	for _, v := range many_mediums {
+		if entry, ok := medium_map[v.Id]; ok {
+			entry.Name = v.Name
+			entry.Id = v.Id
+			entry.Thumbnail = v.Thumbnail
+			entry.Description = v.Description
+			entry.Components = append(entry.Components, models.Medium_ComponentFull{
+				Component: models.Medium_ComponentRow{
+					Id:                v.Component_id,
+					Component_formula: v.Component_formula,
+					Type_id:           v.Component_type_id,
+				},
+				Mg_per_liter: v.Mass})
+			medium_map[v.Id] = entry
+		} else {
+			entry.Name = v.Name
+			entry.Id = v.Id
+			entry.Thumbnail = v.Thumbnail
+			entry.Description = v.Description
+			entry.Components = append(entry.Components, models.Medium_ComponentFull{
+				Component: models.Medium_ComponentRow{
+					Id:                v.Component_id,
+					Component_formula: v.Component_formula,
+					Type_id:           v.Component_type_id,
+				},
+				Mg_per_liter: v.Mass})
 			medium_map[v.Id] = entry
 		}
 	}
@@ -94,7 +161,7 @@ func (r *MediumRepo) CreateMedium(medium *models.Medium) (*models.Medium, error)
 		return nil, err
 	}
 
-  println(medium.Name, medium.Description)
+	println(medium.Name, medium.Description)
 	row := tx.QueryRow(`insert into medium (name, description, thumbnail) values ($1, $2, $3) returning id;`, medium.Name, medium.Description, medium.Thumbnail)
 	err = row.Scan(&data.Id)
 	if err != nil {
@@ -107,7 +174,7 @@ func (r *MediumRepo) CreateMedium(medium *models.Medium) (*models.Medium, error)
 			insert_string += ", "
 		}
 		insert_string += fmt.Sprintf(`(%v,%v,%v)`, data.Id, component.Component_id, component.Mg_per_liter)
-		println(insert_string)
+		println(component.Component_id)
 	}
 	insert_statement += insert_string + ";"
 	_, err = tx.Exec(insert_statement)

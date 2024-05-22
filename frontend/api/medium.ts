@@ -8,12 +8,12 @@ export interface CreateMediumComponentRelationInput {
     component_molar_mass: number;
     type_id: number;
   };
-  mass: string;
+  mg_per_liter: string;
 }
 
 export interface CreateMediumComponentRelationInputFormatted {
   component_id: number | null;
-  mass: string;
+  mg_per_liter: string;
 }
 export interface CreateMediumInput {
   name: string;
@@ -43,7 +43,7 @@ export interface MediumComponent {
     component_formula: string;
     component_molar_mass: number;
   };
-  mass: string;
+  mg_per_liter: string;
 }
 
 export class Medium {

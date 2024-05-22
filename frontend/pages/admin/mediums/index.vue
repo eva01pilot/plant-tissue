@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-8 grid grid-cols-2 gap-16">
+  <div class="pt-8 grid 2xl:grid-cols-2 gap-16">
     <div>
       <h1 class="scroll-m-20 text-lg font-extrabold tracking-tight lg:text-xl
         mb-4">

@@ -7,14 +7,15 @@
         :aria-expanded="open"
         class="w-full justify-between"
       >
-        {{model[props.valueKey].length ? model[props.valueKey] : 'Выберите компонент...' }}
+        {{model ? (model[props.valueKey].length ? model[props.valueKey] :
+        'Выберите...' ) : 'Выберите...'}}
         <ChevronsUpDown class="h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
     <PopoverContent class="p-0 w-full">
     <Command :filter-function="filterFunction as any">
-        <CommandInput  placeholder="Поиск по компонентам..." />
-        <CommandEmpty>Компоненты не найдены</CommandEmpty>
+        <CommandInput  placeholder="Поиск..." />
+        <CommandEmpty>Ничего не найдено</CommandEmpty>
         <CommandList>
           <CommandGroup>
             <CommandItem
@@ -59,7 +60,7 @@ import {
 
 
 
-const model = defineModel<T>({required: true})
+const model = defineModel<T|undefined>({required: true})
 const props = defineProps<{
   items: T[];
   valueKey: keyof T;

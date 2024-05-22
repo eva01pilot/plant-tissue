@@ -12,11 +12,6 @@
         </NuxtLink>
       </NavigationMenuItem>
       <NavigationMenuItem>
-        <NuxtLink to="/components" :class="navigationMenuTriggerStyle()">
-          <NavigationMenuLink>Компоненты питательных сред</NavigationMenuLink>
-        </NuxtLink>
-      </NavigationMenuItem>
-      <NavigationMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger :class="navigationMenuTriggerStyle()">
             Панель администратора
@@ -27,11 +22,6 @@
             <DropdownMenuItem>
               <NuxtLink to="/admin/mediums">
                 <NavigationMenuLink>Питательные среды</NavigationMenuLink>
-              </NuxtLink>
-            </DropdownMenuItem>
-            <DropdownMenuItem >
-              <NuxtLink to="/admin/components" >
-                <NavigationMenuLink>Компоненты питательных сред</NavigationMenuLink>
               </NuxtLink>
             </DropdownMenuItem>
           </DropdownMenuContent>

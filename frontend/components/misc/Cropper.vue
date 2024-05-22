@@ -3,7 +3,7 @@
   <UIButton @click="crop" v-if="fileString" variant="secondary" type="button">
     Обрезать
   </UIButton>
-  <UIInput type="file" @change="handleFileChange"/>
+  <UIInput type="file" @change="handleFileChange" accept=".png,.jpeg,.jpg"/>
 </template>
 
 <script setup lang="ts">
