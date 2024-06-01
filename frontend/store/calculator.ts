@@ -1,5 +1,6 @@
 import type { MediumFull } from "~/api/medium";
 import { useMediumStore } from "./mediums";
+import type { CalculatorResult } from "~/api/calculator";
 
 export const useCalculatorStore = defineStore("calculator", () => {
   const { $api, $notify } = useNuxtApp();
@@ -11,6 +12,8 @@ export const useCalculatorStore = defineStore("calculator", () => {
   mediumStore.fetchMediums()
   const selectedMedium = ref<MediumFull>(mediums.value[0]);
 
+  const calculatorResult = ref<CalculatorResult[]>([])
+
   const calculate = async () => {
     try {
       const res = await $api.calculator.calculate({
@@ -18,11 +21,12 @@ export const useCalculatorStore = defineStore("calculator", () => {
         volume: volume.value,
         medium_id: selectedMedium.value?.id ?? 0,
       });
+      calculatorResult.value = res.data
     } catch (e) {
         $notify("Не удалось рассчитать состав")
 
     }
   };
 
-  return { volume, concentration, selectedMedium, calculate };
+  return { volume, concentration, selectedMedium, calculate, calculatorResult };
 });

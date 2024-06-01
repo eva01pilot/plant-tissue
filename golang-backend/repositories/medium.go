@@ -184,3 +184,4 @@ func (r *MediumRepo) CreateMedium(medium *models.Medium) (*models.Medium, error)
 	err = tx.Commit()
 	return &data, err
 }
+

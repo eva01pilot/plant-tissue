@@ -133,11 +133,7 @@ const table = useVueTable({
       </Table>
     </div>
 
-    <div class="flex items-center justify-end space-x-2 py-4">
-      <div class="flex-1 text-sm text-muted-foreground">
-        {{ table.getFilteredSelectedRowModel().rows.length }} of
-        {{ table.getFilteredRowModel().rows.length }} row(s) selected.
-      </div>
+    <div class="flex items-center justify-start space-x-2 py-4">
       <div class="space-x-2">
         <Button
           variant="outline"

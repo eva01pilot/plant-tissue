@@ -50,6 +50,10 @@ export const useMediumFormStore = defineStore("medium-form", () => {
           mg_per_liter: el.mg_per_liter,
         })),
       });
+      formValues.name = ""
+      formValues.description = ""
+      formValues.thumbnail = null
+      formValues.components = [{mg_per_liter: "0", component: {id:null, component_formula: "", type_id: 0, component_molar_mass: 0}}]
     } catch (e) {
       $notify("Не удалось создать среду");
     }

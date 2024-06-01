@@ -22,7 +22,7 @@
         type="number"
         v-model="formValues.components[id].mg_per_liter"
         placeholder="Мг/л"
-        step="0.01"
+        step="0.001"
       />
       <UIButton type="button" variant="destructive"
       @click="formValues.components.splice(id,1)"
@@ -50,11 +50,15 @@
 </template>
 
 <script setup lang="ts">
+import { useComponentsStore } from "~/store/components";
 import { useMediumFormStore } from "~/store/mediums";
 
 const mediumFormStore = useMediumFormStore();
 const { components, formValues } = storeToRefs(mediumFormStore);
+const componentStore = useComponentsStore();
 onMounted(() => {
   mediumFormStore.searchComponents("");
+  componentStore.fetchComponentTypes()
+
 });
 </script>

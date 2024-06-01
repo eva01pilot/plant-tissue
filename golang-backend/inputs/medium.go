@@ -10,7 +10,7 @@ import (
 
 type CreateMediumComponentRelationInput struct {
 	Component_id int `json:"component_id" form:"component_id"`
-	Mg_per_liter int `json:"mg_per_liter" form:"mg_per_liter"`
+	Mg_per_liter float32 `json:"mg_per_liter" form:"mg_per_liter"`
 }
 
 type CreateMediumInput struct {

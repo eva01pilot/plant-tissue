@@ -14,6 +14,7 @@ type BaseController struct {
   Component ComponentController
   Component_type ComponentTypeController
   Calculator CalculatorController
+	Dataset DatasetController
 }
 
 func NewController(db *sql.DB) *BaseController {
@@ -22,7 +23,9 @@ func NewController(db *sql.DB) *BaseController {
   ComponentController:=ComponentController{DB: db}
   ComponentTypeController:=ComponentTypeController{DB:db}
   CalculatorController:=CalculatorController{DB:db}
+	DatasetController:=DatasetController{DB:db}
 
-  return &BaseController {db: db,User: userController, Medium: mediumController, Component: ComponentController,Component_type: ComponentTypeController, Calculator:CalculatorController}
+
+	return &BaseController {db: db,User: userController, Medium: mediumController, Component: ComponentController,Component_type: ComponentTypeController, Calculator:CalculatorController, Dataset: DatasetController}
 }
 

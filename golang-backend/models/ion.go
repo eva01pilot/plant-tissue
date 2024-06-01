@@ -6,4 +6,3 @@ type Ion struct {
   Molar_mass float32 `json:"molar_mass" form:"molar_mass"`
 }
 
-

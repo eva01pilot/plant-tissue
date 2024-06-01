@@ -65,6 +65,7 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<div>hello_world!!</div>"))
 	})
+	r.Post("/dataset", controllers.MakeHandlerFunc(baseController.Dataset.CreateDatasetEntry))
 
 	http.ListenAndServe(":1000", r)
 }

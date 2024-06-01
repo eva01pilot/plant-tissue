@@ -1,5 +1,7 @@
 <template>
+  <div class="grid grid-cols-2 gap-4">
   <Calculator />
+  </div>
 </template>
 
 <script setup lang="ts">

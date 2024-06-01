@@ -30,8 +30,6 @@ func (c *ComponentController) CreateComponent(w http.ResponseWriter, r *http.Req
 
 	repo := repositories.NewComponentRepo(c.DB)
 
-
-
 	created_component, err := repo.CreateComponent(&body)
   println(created_component)
 

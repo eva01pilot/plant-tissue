@@ -1,19 +1,21 @@
 <template>
   <div class="pt-8 grid 2xl:grid-cols-2 gap-16">
     <div>
-      <h1 class="scroll-m-20 text-lg font-extrabold tracking-tight lg:text-xl
-        mb-4">
+      <h1
+        class="scroll-m-20 mb-10 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+      >
         Создать питательную среду
       </h1>
       <AdminCreateMediumForm />
     </div>
     <div v-if="medium?.name">
-      <h1 class="scroll-m-20 text-lg font-extrabold tracking-tight lg:text-xl
-        mb-4">
+      <h1
+        class="scroll-m-20 text-lg font-extrabold tracking-tight lg:text-xl mb-4"
+      >
         Превью
       </h1>
       <div class="flex justify-center items-center">
-        <DisplayMediumCard class="h-fit"  :medium />
+        <DisplayMediumCard class="h-fit" :medium />
       </div>
     </div>
   </div>

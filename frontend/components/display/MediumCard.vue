@@ -52,9 +52,15 @@ const mainColumns = [
       <CardTitle class="text-lg relative z-10">{{ medium.name }}</CardTitle>
     </CardHeader>
     <CardContent class="flex-grow flex flex-col">
-      <ScrollArea class="flex-grow basis-1 rounded-md border p-4">
-      <CardTitle class="mb-2">Описание</CardTitle>
-        <CardDescription>{{ medium.description }}</CardDescription>
+      <ScrollArea class="flex-grow basis-32  rounded-md border p-4 [&>div]:!block">
+        <div class="w-full">
+          <CardTitle class="mb-2">Описание</CardTitle>
+          <CardDescription class="overflow-auto break-words">
+          {{
+            medium.description
+          }}
+          </CardDescription>
+        </div>
       </ScrollArea>
     </CardContent>
     <CardFooter class="">
