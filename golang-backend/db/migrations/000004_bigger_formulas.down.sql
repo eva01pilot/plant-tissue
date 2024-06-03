@@ -1,2 +1,2 @@
 ALTER TABLE ion
-ALTER COLUMN formula varchar(10);
+ALTER COLUMN formula TYPE varchar(10);

@@ -14,6 +14,27 @@
       <NavigationMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger :class="navigationMenuTriggerStyle()">
+            Анализ данных
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Разделы</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <NuxtLink to="/analysis/dataset/">
+                <NavigationMenuLink>Наполнение датасета</NavigationMenuLink>
+              </NuxtLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <NuxtLink to="/analysis/">
+                <NavigationMenuLink>Анализ</NavigationMenuLink>
+              </NuxtLink>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </NavigationMenuItem>
+      <NavigationMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger :class="navigationMenuTriggerStyle()">
             Панель администратора
           </DropdownMenuTrigger>
           <DropdownMenuContent>

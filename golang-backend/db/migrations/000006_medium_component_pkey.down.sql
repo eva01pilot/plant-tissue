@@ -1,1 +1,1 @@
-ALTER TABLE medium_component DROP medium_component_pkey;
+ALTER TABLE medium_component DROP CONSTRAINT medium_component_pkey;

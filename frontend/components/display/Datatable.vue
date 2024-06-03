@@ -77,7 +77,7 @@ const table = useVueTable({
 
 <template>
   <div class="w-full">
-    <div class="flex items-center py-4">
+    <div class="flex items-center pb-4">
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
           <Button variant="outline">

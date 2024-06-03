@@ -25,7 +25,7 @@ func (r *IonRepo) GetAllIons() ([]models.Ion, error) {
 
 	for rows.Next() {
 		var ion models.Ion
-		err = rows.Scan(&ion)
+		err = rows.Scan(&ion.Id, &ion.Formula, &ion.Molar_mass)
 		if err != nil {
 			return data, err
 		}

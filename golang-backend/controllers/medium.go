@@ -57,3 +57,15 @@ func (c *MediumController) CreateMedium(w http.ResponseWriter, r *http.Request) 
 
 	return WriteJSON(w, 200, body)
 }
+
+func (c *MediumController) CalculateMediumIons(w http.ResponseWriter, r *http.Request) error {
+	repo:= repositories.NewMediumIonRepo(c.DB)
+
+	entries,err:=repo.CreateMediumIonRelations()
+
+	if(err!=nil){
+		return WriteJSON(w,400, err.Error())
+	}
+
+	return WriteJSON(w,200, entries)
+}

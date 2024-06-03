@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"plant-tissue-backend/controllers"
+	"plant-tissue-backend/data-import"
 	"plant-tissue-backend/helpers"
 	"plant-tissue-backend/inputs"
 	"plant-tissue-backend/models"
@@ -35,6 +36,13 @@ func main() {
 			seedIons(db)
       seedComponents(db)
 			return
+		}
+		if path == "seeddataset" {
+			file, err:= os.Open("./dataset.csv")
+			if err!=nil {
+				log.Panic("Cant read dataset file")
+			}
+			dataimport.ImportDataset(file, db)
 		}
 
 	}
@@ -66,6 +74,10 @@ func main() {
 		w.Write([]byte("<div>hello_world!!</div>"))
 	})
 	r.Post("/dataset", controllers.MakeHandlerFunc(baseController.Dataset.CreateDatasetEntry))
+	r.Post("/dataset/import", controllers.MakeHandlerFunc(baseController.Dataset.ImportDataset))
+	r.Get("/dataset", controllers.MakeHandlerFunc(baseController.Dataset.GetFullDataset))
+	r.Get("/analyze", controllers.MakeHandlerFunc(baseController.Dataset.Analyze) )
+	r.Post("/mediums/calculate-ions-relations", controllers.MakeHandlerFunc(baseController.Medium.CalculateMediumIons))
 
 	http.ListenAndServe(":1000", r)
 }
