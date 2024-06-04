@@ -17,11 +17,21 @@ export type CreateDatasetEntryInput = {
   medium_id: number;
 } & DatasetParams
 
+export type AnalyzerResponse = {
+  graphs:string[],
+  summary: string,
+  heatmap: string,
+}
+
 export class Dataset {
   instance: AxiosInstance;
 
   constructor(instance: AxiosInstance) {
     this.instance = instance;
+  }
+
+  analyze(payload: {param:keyof DatasetParams}) {
+    return this.instance.get<AnalyzerResponse>(`/analyze?param=${payload.param}`, )
   }
 
   getDataset() {

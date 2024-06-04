@@ -7,6 +7,12 @@ export default defineNuxtConfig({
       unstyled: true,
     },
   },
+  app:{
+    head: {
+      script: [{src:"https://cdn.plot.ly/plotly-2.32.0.min.js"}]
+    },
+
+  },
   shadcn: {
     prefix: "UI",
 

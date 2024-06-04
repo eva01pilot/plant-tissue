@@ -56,7 +56,6 @@ func main() {
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://plants.ilyadev.com*"},
 		AllowCredentials: true,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
 	r.Use(middleware.Logger)

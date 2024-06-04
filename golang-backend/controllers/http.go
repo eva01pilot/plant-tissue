@@ -12,8 +12,9 @@ import (
 )
 
 func WriteJSON(w http.ResponseWriter, status int, value any) error {
-	w.WriteHeader(status)
 	w.Header().Set("Content-type", "application/json")
+	w.WriteHeader(status)
+	print(w.Header().Get("Content-type"))
 	return json.NewEncoder(w).Encode(value)
 }
 
@@ -118,6 +119,7 @@ func WriteFormFile(file *multipart.FileHeader, path string) (*string,error) {
   if(err!=nil) {
     return nil,err
   }
+
 
 	return &full_path, nil
 }

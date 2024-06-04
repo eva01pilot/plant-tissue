@@ -1,6 +1,10 @@
 import type { MediumFull } from "~/api/medium";
 import { useMediumStore } from "./mediums";
-import type { DatasetFull, DatasetParams } from "~/api/dataset";
+import type {
+  AnalyzerResponse,
+  DatasetFull,
+  DatasetParams,
+} from "~/api/dataset";
 
 export const useDatasetFormStore = defineStore("dataset-form", () => {
   const { $api, $notify } = useNuxtApp();
@@ -26,7 +30,7 @@ export const useDatasetFormStore = defineStore("dataset-form", () => {
         medium_id: selectedMedium.value.id,
       });
     } catch (e) {
-      $notify("Не получилось создать запись")
+      $notify("Не получилось создать запись");
     }
   };
 
@@ -37,22 +41,73 @@ export const useDatasetStore = defineStore("dataset", () => {
   const { $api, $notify } = useNuxtApp();
 
   const dataset = ref<DatasetFull[]>([]);
-  const file = ref<File>()
+  const file = ref<File>();
 
-  const importDataset = async() => {
+  const importDataset = async () => {
     try {
-      if(!file.value) {
-        throw new Error()
+      if (!file.value) {
+        throw new Error();
       }
-      await $api.dataset.importDataset(file.value)
-
-    } catch(e) {
-      $notify("Не удалось импортировать датасет")
+      await $api.dataset.importDataset(file.value);
+    } catch (e) {
+      console.log(e);
+      $notify("Не удалось импортировать датасет");
     }
-  }
+  };
 
   const fetchDataset = async () => {
     dataset.value = (await $api.dataset.getDataset()).data;
   };
   return { dataset, fetchDataset, file, importDataset };
+});
+
+export const useAnalyzerStore = defineStore("analyzer", () => {
+  const { $api, $notify } = useNuxtApp();
+
+  const analyzerResult = ref<AnalyzerResponse>();
+  const selectedParam = ref<{ name: keyof DatasetParams; display: string }>();
+
+  const paramArray = ref<{ name: keyof DatasetParams; display: string }[]>([
+    {
+      name: "node_count",
+      display: "Количество узлов",
+    },
+    {
+      name: "plant_height",
+      display: "Высота растения",
+    },
+    {
+      name: "true_leaves_count",
+      display: "Количество настоящих листьев",
+    },
+    {
+      name: "side_shoots_count",
+      display: "Количество боковых побегов",
+    },
+    {
+      name: "chlorophyll_percent",
+      display: "Количество хлорофилла",
+    },
+    {
+      name: "reproduction_coefficient",
+      display: "Коэффициент размножения",
+    },
+  ]);
+
+  const analyze = async () => {
+    try {
+      if (!selectedParam.value) {
+        throw new Error();
+      }
+      analyzerResult.value = (
+        await $api.dataset.analyze({
+          param: selectedParam.value.name,
+        })
+      ).data;
+    } catch (e) {
+      $notify("Произошла ошибка в работе анализатора");
+    }
+  };
+
+  return { analyzerResult, selectedParam, analyze, paramArray };
 });

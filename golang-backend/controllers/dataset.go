@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -18,6 +19,7 @@ type DatasetController struct {
 }
 
 func (c *DatasetController) Analyze (w http.ResponseWriter, r *http.Request) error {
+	param:=r.URL.Query().Get("param")
 	repo := repositories.NewDatasetRepo(c.DB)
 	ion_repo := repositories.NewIonRepo(c.DB)
 
@@ -73,12 +75,13 @@ func (c *DatasetController) Analyze (w http.ResponseWriter, r *http.Request) err
 	part, _ := writer.CreateFormFile("dataset", "dataset.csv")
   io.Copy(part, reader)
   writer.Close()
-	req, _ := http.NewRequest("POST", "http://80.87.106.181:4000/analysis/plant_height", body)
+	req, _ := http.NewRequest("POST", fmt.Sprintf(`http://80.87.106.181:4000/analysis/%v`, param), body)
   req.Header.Add("Content-Type", writer.FormDataContentType())
   client := &http.Client{}
 	res, err:=client.Do(req)
 	var target any
 	json.NewDecoder(res.Body).Decode(&target)
+	print(target)
 	return WriteJSON(w,200, target)
 }
 func (c *DatasetController) ImportDataset (w http.ResponseWriter, r *http.Request) error {

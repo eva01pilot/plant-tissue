@@ -12,6 +12,7 @@ import statsmodels.api as sm
 import plotly.express as px
 import plotly.io as pio
 import plotly.graph_objects as go
+import numpy as np
 
 origins = [
     "https://api.ilyadev.com",
@@ -72,7 +73,7 @@ def get_all():
 def analyze(feature:str, dataset: UploadFile):
     print("hjiii")
     df = csvToDf(dataset.file)
-    dicti = linearRegression(feature, df)
+    dicti = analysis(feature, df)
     encoded = jsonable_encoder(dicti)
     return JSONResponse(content=encoded)
 
@@ -81,7 +82,7 @@ def csvToDf(buffer):
     df = pd.read_csv(buffer)
     return df
 
-def linearRegression(param: str, df: pd.DataFrame):
+def analysis(param: str, df: pd.DataFrame):
     X = df.iloc[:, :-6]
     Y = df[param]
 
@@ -91,7 +92,6 @@ def linearRegression(param: str, df: pd.DataFrame):
     model = sm.OLS(Y, X).fit()
 
     # Получение результатов модели
-    print(model.summary())
 
     # Создание модели и подгонка данных
     model = sm.OLS(Y, X).fit()
@@ -101,13 +101,31 @@ def linearRegression(param: str, df: pd.DataFrame):
 
     graphs = []
     # Создание графика pairplot с линией тренда
-    for col in x_vars:
+    for id,col in enumerate(x_vars):
         fig = px.scatter(df, x=col, y=param, trendline="ols")
-        graphs.append(fig.to_html(full_html=False))
+        if(id==0):
+            graphs.append(fig.to_html(full_html=False,include_plotlyjs=False))
+        else:
+            graphs.append(fig.to_html(full_html=False,include_plotlyjs=False))
+
+    corr_matrix = df.corr()
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Heatmap(
+            x = corr_matrix.columns,
+            y = corr_matrix.index,
+            z = np.array(corr_matrix),
+            text=corr_matrix.values,
+            texttemplate='%{text:.2f}'
+        )
+    )
+    fig.show()
 
     return {
             "graphs": graphs,
-            "summary": model.summary().as_html()
+            "summary": model.summary().as_html(),
+            "heatmap": fig.to_html(full_html=False, include_plotlyjs=False)
     }
 
 
