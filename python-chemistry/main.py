@@ -71,14 +71,12 @@ def get_all():
 
 @app.post("/analysis/{feature}")
 def analyze(feature:str, dataset: UploadFile):
-    print("hjiii")
     df = csvToDf(dataset.file)
     dicti = analysis(feature, df)
     encoded = jsonable_encoder(dicti)
     return JSONResponse(content=encoded)
 
 def csvToDf(buffer):
-    print("hell")
     df = pd.read_csv(buffer)
     return df
 
@@ -97,11 +95,17 @@ def analysis(param: str, df: pd.DataFrame):
     model = sm.OLS(Y, X).fit()
 
     # Get the original column names from df, excluding the last 6
-    x_vars = df.columns[:-6]
-
+    df_excluded = (df[df.columns.difference(['plant_height', 'node_count',
+                                               'chlorophyll_percent',
+                                               'side_shoots_count',
+                                               'reproduction_coefficient',
+                                               'true_leaves_count'])])
+    x_vars = df_excluded.columns
+    print(x_vars, df.columns)
     graphs = []
     # Создание графика pairplot с линией тренда
     for id,col in enumerate(x_vars):
+
         fig = px.scatter(df, x=col, y=param, trendline="ols")
         if(id==0):
             graphs.append(fig.to_html(full_html=False,include_plotlyjs=False))
