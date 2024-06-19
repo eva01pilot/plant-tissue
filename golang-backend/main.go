@@ -77,6 +77,7 @@ func main() {
 	r.Get("/dataset", controllers.MakeHandlerFunc(baseController.Dataset.GetFullDataset))
 	r.Get("/analyze", controllers.MakeHandlerFunc(baseController.Dataset.Analyze) )
 	r.Post("/mediums/calculate-ions-relations", controllers.MakeHandlerFunc(baseController.Medium.CalculateMediumIons))
+	r.Get("/dataset/import-ions", controllers.MakeHandlerFunc(baseController.Dataset.GetAllIonsCSV))
 
 	http.ListenAndServe(":1000", r)
 }

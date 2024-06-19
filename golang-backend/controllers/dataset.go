@@ -119,6 +119,53 @@ func (c *DatasetController) CreateDatasetEntry(w http.ResponseWriter, r *http.Re
 	return WriteJSON(w, 200, created_component)
 }
 
+func (c *DatasetController) GetAllIonsCSV(w http.ResponseWriter, r *http.Request) error {
+
+	repo := repositories.NewDatasetRepo(c.DB)
+	ion_repo := repositories.NewIonRepo(c.DB)
+
+	ions, err := ion_repo.GetAllIons()
+	if err != nil {
+		return WriteJSON(w, 400, err.Error())
+	}
+
+	var entry_map_map = make(map[int]map[string]float32)
+	var entry_map_list []map[string]float32
+
+	entries, err := repo.GetAllEntries()
+
+	for _, entry := range entries {
+		if e, ok := entry_map_map[entry.Id]; ok {
+			e[entry.Formula] = entry.Molarity
+			entry_map_map[entry.Id] = e
+		} else {
+			e = make(map[string]float32)
+			for _, ion:=range ions {
+				e[ion.Formula] = 0
+			}
+			e[entry.Formula] = entry.Molarity
+			entry_map_map[entry.Id] = e
+		}
+	}
+
+	for _, entry := range entry_map_map {
+		entry_map_list = append(entry_map_list, entry)
+	}
+
+	var keys []string
+	for k := range entry_map_list[0] {
+		keys = append(keys, k)
+	}
+	bytes,err:=helpers.EncodeCSV(keys, entry_map_list)
+
+	w.Header().Add("Content-Disposition", `attachment; filename="test.csv"`)
+	if err != nil {
+		return WriteJSON(w, 400, err.Error())
+	}
+		_,err = w.Write(bytes)
+	return err
+}
+
 func (c *DatasetController) GetFullDatasetCSV(w http.ResponseWriter, r *http.Request) error {
 	repo := repositories.NewDatasetRepo(c.DB)
 	ion_repo := repositories.NewIonRepo(c.DB)

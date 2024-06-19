@@ -17,10 +17,27 @@ export type CreateDatasetEntryInput = {
   medium_id: number;
 } & DatasetParams
 
+
+export type AnalyzerFigureResult = {
+  figure: string;
+  mse?: string;
+  r2?: string;
+  coefficients: Record<string, number>,
+
+}
+
 export type AnalyzerResponse = {
-  graphs:string[],
-  summary: string,
-  heatmap: string,
+  corr_matrix: string;
+  linear_regression: {
+    graphs:string[];
+    summary: string;
+  },
+  neural_net: AnalyzerFigureResult,
+  decision_tree: AnalyzerFigureResult,
+  knn: AnalyzerFigureResult,
+  random_forest: AnalyzerFigureResult,
+  lasso: AnalyzerFigureResult,
+  ridge: AnalyzerFigureResult,
 }
 
 export class Dataset {
