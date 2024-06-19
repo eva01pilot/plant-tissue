@@ -75,7 +75,7 @@ func (c *DatasetController) Analyze (w http.ResponseWriter, r *http.Request) err
 	part, _ := writer.CreateFormFile("dataset", "dataset.csv")
   io.Copy(part, reader)
   writer.Close()
-	req, _ := http.NewRequest("POST", fmt.Sprintf(`http://80.87.106.181:4000/analysis/%v`, param), body)
+	req, _ := http.NewRequest("POST", fmt.Sprintf(`http://localhost:4000/analysis/%v`, param), body)
   req.Header.Add("Content-Type", writer.FormDataContentType())
   client := &http.Client{}
 	res, err:=client.Do(req)

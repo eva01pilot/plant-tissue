@@ -54,7 +54,7 @@ func main() {
 	defer db.Close()
 
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://plants.ilyadev.com*"},
+		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 	}))
 
