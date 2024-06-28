@@ -7,7 +7,7 @@ import { Medium } from "~/api/medium";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const instance = axios.create({
-    baseURL: "http://localhost:1000",
+    baseURL: "https://goback.ilyadev.com",
     maxContentLength: Infinity,
     maxBodyLength: Infinity,
     timeout: 1000000
